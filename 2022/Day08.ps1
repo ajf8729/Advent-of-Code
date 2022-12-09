@@ -6,114 +6,190 @@ Param(
 $data = Get-Content $filename
 $rows = $data[0].Length
 $cols = $data.Length
-Write-Verbose "rows: $rows"
-Write-Verbose "cols: $cols"
+$highScore = 0
 $visible = 0
 
-for ($rownum = 1; $rownum -lt $rows - 1; $rownum++) {
-    $isAboveVisible = 0
-    $isBelowVisible = 0
-    $isLeftVisible = 0
-    $isRightVisible = 0
-    for ($colnum = 1; $colnum -lt $cols - 1; $colnum++) {
+for ($row = 1; $row -lt $rows - 1; $row++) {
+    $visibleFromAbove = 0
+    $visibleFromBelow = 0
+    $visibleFromLeft = 0
+    $visibleFromRight = 0
+    $abovePoints = 0
+    $belowPoints = 0
+    $leftPoints = 0
+    $rightPoints = 0
+    Write-Verbose "begin row: $row"
+    Write-Verbose ''
+    for ($col = 1; $col -lt $cols - 1; $col++) {
         #$data
-        $isAboveVisible = 0
-        $isBelowVisible = 0
-        $isLeftVisible = 0
-        $isRightVisible = 0
-        Write-Verbose "rownum: $rownum"
-        Write-Verbose "colnum: $colnum"
-        $current = $data[$rownum][$colnum]
+        $visibleFromAbove = 0
+        $visibleFromBelow = 0
+        $visibleFromLeft = 0
+        $visibleFromRight = 0
+        $abovePoints = 0
+        $belowPoints = 0
+        $leftPoints = 0
+        $rightPoints = 0
+        Write-Verbose "begin col: $col"
         Write-Verbose ''
-        Write-Verbose "current: $current ($rownum,$colnum)"
+        $currentTree = $data[$row][$col]
+        Write-Verbose "currentTree number: $currentTree, at position ($row,$col)"
         Write-Verbose ''
-        Write-Verbose 'above check:'
-        Write-Verbose "isAboveVisible: $isAboveVisible"
-        for ($i = $rownum - 1; $i -ge 0; $i--) {
-            Write-Verbose "i: $i"
-            if ($current -gt $data[$i][$colnum]) {
-                Write-Verbose "$current is visible from above ($($data[$i][$colnum]))"
-                $isAboveVisible++
+        Write-Verbose 'begin above check'
+        $blocked = $false
+        for ($i = $row - 1; $i -ge 0; $i--) {
+            if ($currentTree -gt $data[$i][$col]) {
+                Write-Verbose "$currentTree is visible from above ($($data[$i][$col]))"
+                $visibleFromAbove++
+                if (!$blocked) {
+                    $abovePoints++
+                }
+                Write-Verbose "above points: $abovePoints"
             }
             else {
-                Write-Verbose "$current is not visible from above ($($data[$i][$colnum]))"
+                Write-Verbose "$currentTree is not visible from above ($($data[$i][$col]))"
+                if ($currentTree -le $($data[$i][$col])) {
+                    Write-Verbose 'blocked'
+                    $blocked = $true
+                }
+                if ($blocked) {
+                    If (!$addedBlockedPoint) {
+                        Write-Verbose 'adding blocked point'
+                        $abovePoints++
+                        Write-Verbose "above points: $abovePoints"
+                        $addedBlockedPoint = $true
+                    }
+                }
             }
-        }
-        Write-Verbose "isAboveVisible: $isAboveVisible"
-        Write-Verbose "rownum: $rownum"
-        if ($isAboveVisible -eq $rownum) {
-            write-verbose "above visible = yes"
-            $visible++
-            Write-Verbose "visible = $visible"
-            $isAboveVisible = 0
-            continue
+            Write-Verbose ''
+            Write-Verbose 'next tree'
         }
         Write-Verbose ''
-        Write-Verbose 'below check:'
-        for ($i = $rownum + 1; $i -lt $rows; $i++) {
-            if ($current -gt $data[$i][$colnum]) {
-                Write-Verbose "$current is visible from below ($($data[$i][$colnum]))"
-                $isBelowVisible++
+        Write-Verbose 'begin below check'
+        $blocked = $false
+        for ($i = $row + 1; $i -lt $rows; $i++) {
+            if ($currentTree -gt $data[$i][$col]) {
+                Write-Verbose "$currentTree is visible from below ($($data[$i][$col]))"
+                $visibleFromBelow++
+                if (!$blocked) {
+                    $belowPoints++
+                }
+                Write-Verbose "below points: $belowPoints"
             }
             else {
-                Write-Verbose "$current is not visible from below ($($data[$i][$colnum]))"
+                Write-Verbose "$currentTree is not visible from below ($($data[$i][$col]))"
+                if ($currentTree -le $data[$i][$col]) {
+                    Write-Verbose 'blocked'
+                    $blocked = $true
+                }
+                if ($blocked) {
+                    If (!$addedBlockedPoint) {
+                        Write-Verbose 'adding blocked point'
+                        $belowPoints++
+                        Write-Verbose "below points: $belowPoints"
+                        $addedBlockedPoint = $true
+                    }
+                }
             }
+            Write-Verbose ''
+            Write-Verbose 'next tree'
         }
-        if ($isBelowVisible -eq $rows - ($rownum + 1)) {
-            write-verbose "below visible = yes"
+        $addedBlockedPoint = $false
+        Write-Verbose ''
+        Write-Verbose 'begin left check'
+        $blocked = $false
+        for ($i = $col - 1; $i -ge 0; $i--) {
+            if ($currentTree -gt $data[$row][$i]) {
+                Write-Verbose "$currentTree is visible from the left ($($data[$row][$i]))"
+                $visibleFromLeft++
+                if (!$blocked) {
+                    $leftPoints++
+                }
+                Write-Verbose "left points: $leftPoints"
+            }
+            else {
+                Write-Verbose "$currentTree is not visible from the left ($($data[$row][$i]))"
+                if ($currentTree -le $data[$row][$i]) {
+                    Write-Verbose 'blocked'
+                    $blocked = $true
+                }
+                if ($blocked) {
+                    If (!$addedBlockedPoint) {
+                        Write-Verbose 'adding blocked point'
+                        $leftPoints++
+                        Write-Verbose "left points: $leftPoints"
+                        $addedBlockedPoint = $true
+                    }
+                }
+            }
+            Write-Verbose ''
+            Write-Verbose 'next tree'
+        }
+        $addedBlockedPoint = $false
+        Write-Verbose ''
+        Write-Verbose 'begin right check'
+        $blocked = $false
+        for ($i = $col + 1; $i -lt $cols; $i++) {
+            if ($currentTree -gt $data[$row][$i]) {
+                Write-Verbose "$currentTree is visible from the right ($($data[$row][$i]))"
+                $visibleFromRight++
+                if (!$blocked) {
+                    $rightPoints++
+                }
+                Write-Verbose "right points: $rightPoints"
+            }
+            else {
+                Write-Verbose "$currentTree is not visible from the right ($($data[$row][$i]))"
+                if ($currentTree -le $data[$row][$i]) {
+                    Write-Verbose 'blocked'
+                    $blocked = $true
+                }
+                if ($blocked) {
+                    If (!$addedBlockedPoint) {
+                        Write-Verbose 'adding blocked point'
+                        $rightPoints++
+                        Write-Verbose "right points: $rightPoints"
+                        $addedBlockedPoint = $true
+                    }
+                }
+            }
+            Write-Verbose ''
+            Write-Verbose 'next tree'
+        }
+        $addedBlockedPoint = $false
+        if (($visibleFromAbove -eq $row) -or ($visibleFromBelow -eq $rows - ($row + 1)) -or ($visibleFromLeft -eq $col) -or ($visibleFromRight -eq $cols - ($col + 1))) {
+            Write-Verbose ''
+            Write-Verbose "$currentTree is visible"
             $visible++
-            Write-Verbose "visible = $visible"
-            $isBelowVisible = 0
-            continue
+            $visibleFromAbove = 0
+            $visibleFromBelow = 0
+            $visibleFromLeft = 0
+            $visibleFromRight = 0
         }
         Write-Verbose ''
-        Write-Verbose 'left check:'
-        for ($i = $colnum - 1; $i -ge 0; $i--) {
-            if ($current -gt $data[$rownum][$i]) {
-                Write-Verbose "$current is visible from the left ($($data[$rownum][$i]))"
-                $isLeftVisible++
-            }
-            else {
-                Write-Verbose "$current is not visible from the left ($($data[$rownum][$i]))"
-            }
-        }
-        if ($isLeftVisible -eq $colnum) {
-            write-verbose "left visible = yes"
-            $visible++
-            Write-Verbose "visible = $visible"
-            $isLeftVisible = 0
-            continue
+        Write-Verbose 'begin points check'
+        Write-Verbose "above points: $abovePoints"
+        Write-Verbose "below points: $belowPoints"
+        Write-Verbose "left points: $leftPoints"
+        Write-Verbose "right points: $rightPoints"
+        $score = ($abovePoints) * ($belowPoints) * ($leftPoints) * ($rightPoints)
+        Write-Verbose "score: $score"
+        if ($score -gt $highScore) {
+            $highScore = $score
         }
         Write-Verbose ''
-        Write-Verbose 'right check:'
-        Write-Verbose "isRightVisible: $isRightVisible"
-        for ($i = $colnum + 1; $i -lt $cols; $i++) {
-            Write-Verbose "i: $i"
-            if ($current -gt $data[$rownum][$i]) {
-                Write-Verbose "$current is visible from the right ($($data[$rownum][$i]))"
-                $isRightVisible++
-            }
-            else {
-                Write-Verbose "$current is not visible from the right ($($data[$rownum][$i]))"
-            }
-        }
-        Write-Verbose "isRightVisible: $isRightVisible"
-        if ($isRightVisible -eq $cols - ($colnum + 1)) {
-            write-verbose "right visible = yes"
-            $visible++
-            Write-Verbose "visible = $visible"
-            $isRightVisible = 0
-            continue
-        }
+        Write-Verbose "col $col done"
     }
     Write-Verbose ''
-    Write-Verbose 'next row'
+    Write-Verbose "row $row done"
 }
-Write-Verbose 'done'
+Write-Verbose ''
+Write-Verbose 'all done'
 
 $edges = ($data[0].Length * 2) + (($data.Length - 2) * 2)
 
-Write-Host "edges: $edges"
-Write-Host "visible: $visible"
+Write-Verbose "edges: $edges"
+Write-Verbose "visible: $visible"
 $total = $edges + $visible
-Write-Host "total: $total"
+Write-Host "Part 01 answer: $total"
+Write-Host "Part 02 answer: $highScore"

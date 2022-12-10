@@ -4,7 +4,8 @@
 # Day05Start.txt is my massaged grid in a workable format
 # Day05MovesWorkable.txt is my massaged list of moves in a workable format
 
-$grid = Get-Content .\Day05Start.txt
+#$grid = Get-Content .\Day05Start.txt
+$grid = Get-Content .\day05gridtest.txt
 <#
 $grid contents:
 
@@ -19,7 +20,8 @@ DNJVRZHQ
 BNHMS
 #>
 
-$moves = Get-Content .\Day05MovesWorkable.txt
+#$moves = Get-Content .\Day05MovesWorkable.txt
+$moves = Get-Content .\day05movestest.txt
 foreach ($move in $moves) {
     $move = $move.Split(',')
     <#

@@ -126,17 +126,36 @@ function Move-Tail {
                 $tailBCoordinates[0]++
             }
             if ($tailACoordinates[0] -lt $tailBCoordinates[0]) {
-                $tailACoordinates[0]++
+                $tailBCoordinates[0]--
             }
             if ($tailACoordinates[1] -gt $tailBCoordinates[1]) {
                 $tailBCoordinates[1]++
             }
             if ($tailACoordinates[1] -lt $tailBCoordinates[1]) {
-                $tailACoordinates[0]++
+                $tailBCoordinates[1]--
             }
             break
         }
         ([Math]::Sqrt(5)) {
+            if ($tailACoordinates[0] -gt $tailBCoordinates[0] -and $tailACoordinates[1] -gt $tailBCoordinates[1]) {
+                $tailBCoordinates[0]++
+                $tailBCoordinates[1]++
+            }
+            elseif ($tailACoordinates[0] -lt $tailBCoordinates[0] -and $tailACoordinates[1] -gt $tailBCoordinates[1]) {
+                $tailBCoordinates[0]--
+                $tailBCoordinates[1]++
+            }
+            elseif ($tailACoordinates[0] -gt $tailBCoordinates[0] -and $tailACoordinates[1] -lt $tailBCoordinates[1]) {
+                $tailBCoordinates[0]++
+                $tailBCoordinates[1]--
+            }
+            elseif ($tailACoordinates[0] -lt $tailBCoordinates[0] -and $tailACoordinates[1] -lt $tailBCoordinates[1]) {
+                $tailBCoordinates[0]--
+                $tailBCoordinates[1]--
+            }
+            break
+        }
+        ([Math]::Sqrt(8)) {
             if ($tailACoordinates[0] -gt $tailBCoordinates[0] -and $tailACoordinates[1] -gt $tailBCoordinates[1]) {
                 $tailBCoordinates[0]++
                 $tailBCoordinates[1]++
@@ -185,85 +204,103 @@ foreach ($move in $moves) {
     $steps = $move.Split()[1]
     for ($i = 0; $i -lt $steps; $i++) {
         $hCoordinates, $t1Coordinates = Move-Head -direction $direction -headCoordinates $hCoordinates -tailCoordinates $t1Coordinates
-        if ($null -eq $t1CoordinatesVisited[[string]$t1Coordinates]) {
-            [string]$key = $t1Coordinates
-            [int]$val = 1
-            $t1CoordinatesVisited.Add($key, $val)
+        if ($hCoordinates -ne $t1Coordinates) {
+            if ($null -eq $t1CoordinatesVisited[[string]$t1Coordinates]) {
+                [string]$key = $t1Coordinates
+                [int]$val = 1
+                $t1CoordinatesVisited.Add($key, $val)
+            }
         }
         else {
             $t1CoordinatesVisited[[string]$t1Coordinates]++
         }
-        $t1Coordinates, $t2Coordinates = Move-Tail -tailACoordinates $t1Coordinates -tailBCoordinates $t2Coordinates
-        if ($null -eq $t2CoordinatesVisited[[string]$t2Coordinates]) {
-            [string]$key = $t2Coordinates
-            [int]$val = 1
-            $t2CoordinatesVisited.Add($key, $val)
+        if ($t1Coordinates -ne $t2Coordinates) {
+            $t1Coordinates, $t2Coordinates = Move-Tail -tailACoordinates $t1Coordinates -tailBCoordinates $t2Coordinates
+            if ($null -eq $t2CoordinatesVisited[[string]$t2Coordinates]) {
+                [string]$key = $t2Coordinates
+                [int]$val = 1
+                $t2CoordinatesVisited.Add($key, $val)
+            }
+            else {
+                $t2CoordinatesVisited[[string]$t2Coordinates]++
+            }
         }
-        else {
-            $t2CoordinatesVisited[[string]$t2Coordinates]++
+        if ($t2Coordinates -ne $t3Coordinates) {
+            $t2Coordinates, $t3Coordinates = Move-Tail -tailACoordinates $t2Coordinates -tailBCoordinates $t3Coordinates
+            if ($null -eq $t3CoordinatesVisited[[string]$t3Coordinates]) {
+                [string]$key = $t3Coordinates
+                [int]$val = 1
+                $t3CoordinatesVisited.Add($key, $val)
+            }
+            else {
+                $t3CoordinatesVisited[[string]$t3Coordinates]++
+            }
         }
-        $t2Coordinates, $t3Coordinates = Move-Tail -tailACoordinates $t2Coordinates -tailBCoordinates $t3Coordinates
-        if ($null -eq $t3CoordinatesVisited[[string]$t3Coordinates]) {
-            [string]$key = $t3Coordinates
-            [int]$val = 1
-            $t3CoordinatesVisited.Add($key, $val)
+        if ($t3Coordinates -ne $t4Coordinates) {
+            $t3Coordinates, $t4Coordinates = Move-Tail -tailACoordinates $t3Coordinates -tailBCoordinates $t4Coordinates
+            if ($null -eq $t4CoordinatesVisited[[string]$t4Coordinates]) {
+                [string]$key = $t4Coordinates
+                [int]$val = 1
+                $t4CoordinatesVisited.Add($key, $val)
+            }
+            else {
+                $t4CoordinatesVisited[[string]$t4Coordinates]++
+            }
         }
-        else {
-            $t3CoordinatesVisited[[string]$t3Coordinates]++
+        if ($t4Coordinates -ne $t5Coordinates) {
+            $t4Coordinates, $t5Coordinates = Move-Tail -tailACoordinates $t4Coordinates -tailBCoordinates $t5Coordinates
+            if ($null -eq $t5CoordinatesVisited[[string]$t5Coordinates]) {
+                [string]$key = $t5Coordinates
+                [int]$val = 1
+                $t5CoordinatesVisited.Add($key, $val)
+            }
+            else {
+                $t5CoordinatesVisited[[string]$t5Coordinates]++
+            }
         }
-        $t3Coordinates, $t4Coordinates = Move-Tail -tailACoordinates $t3Coordinates -tailBCoordinates $t4Coordinates
-        if ($null -eq $t4CoordinatesVisited[[string]$t4Coordinates]) {
-            [string]$key = $t4Coordinates
-            [int]$val = 1
-            $t4CoordinatesVisited.Add($key, $val)
+        if ($t5Coordinates -ne $t6Coordinates) {
+            $t5Coordinates, $t6Coordinates = Move-Tail -tailACoordinates $t5Coordinates -tailBCoordinates $t6Coordinates
+            if ($null -eq $t6CoordinatesVisited[[string]$t6Coordinates]) {
+                [string]$key = $t6Coordinates
+                [int]$val = 1
+                $t6CoordinatesVisited.Add($key, $val)
+            }
+            else {
+                $t6CoordinatesVisited[[string]$t6Coordinates]++
+            }
         }
-        else {
-            $t4CoordinatesVisited[[string]$t4Coordinates]++
+        if ($t6Coordinates -ne $t7Coordinates) {
+            $t6Coordinates, $t7Coordinates = Move-Tail -tailACoordinates $t6Coordinates -tailBCoordinates $t7Coordinates
+            if ($null -eq $t7CoordinatesVisited[[string]$t7Coordinates]) {
+                [string]$key = $t7Coordinates
+                [int]$val = 1
+                $t7CoordinatesVisited.Add($key, $val)
+            }
+            else {
+                $t7CoordinatesVisited[[string]$t7Coordinates]++
+            }
         }
-        $t4Coordinates, $t5Coordinates = Move-Tail -tailACoordinates $t4Coordinates -tailBCoordinates $t5Coordinates
-        if ($null -eq $t5CoordinatesVisited[[string]$t5Coordinates]) {
-            [string]$key = $t5Coordinates
-            [int]$val = 1
-            $t5CoordinatesVisited.Add($key, $val)
+        if ($t7Coordinates -ne $t8Coordinates) {
+            $t7Coordinates, $t8Coordinates = Move-Tail -tailACoordinates $t7Coordinates -tailBCoordinates $t8Coordinates
+            if ($null -eq $t8CoordinatesVisited[[string]$t8Coordinates]) {
+                [string]$key = $t8Coordinates
+                [int]$val = 1
+                $t8CoordinatesVisited.Add($key, $val)
+            }
+            else {
+                $t8CoordinatesVisited[[string]$t8Coordinates]++
+            }
         }
-        else {
-            $t5CoordinatesVisited[[string]$t5Coordinates]++
-        }
-        $t5Coordinates, $t6Coordinates = Move-Tail -tailACoordinates $t5Coordinates -tailBCoordinates $t6Coordinates
-        if ($null -eq $t6CoordinatesVisited[[string]$t6Coordinates]) {
-            [string]$key = $t6Coordinates
-            [int]$val = 1
-            $t6CoordinatesVisited.Add($key, $val)
-        }
-        else {
-            $t6CoordinatesVisited[[string]$t6Coordinates]++
-        }
-        $t6Coordinates, $t7Coordinates = Move-Tail -tailACoordinates $t6Coordinates -tailBCoordinates $t7Coordinates
-        if ($null -eq $t7CoordinatesVisited[[string]$t7Coordinates]) {
-            [string]$key = $t7Coordinates
-            [int]$val = 1
-            $t7CoordinatesVisited.Add($key, $val)
-        }
-        else {
-            $t7CoordinatesVisited[[string]$t7Coordinates]++
-        }
-        $t7Coordinates, $t8Coordinates = Move-Tail -tailACoordinates $t7Coordinates -tailBCoordinates $t8Coordinates
-        if ($null -eq $t8CoordinatesVisited[[string]$t8Coordinates]) {
-            [string]$key = $t8Coordinates
-            [int]$val = 1
-            $t8CoordinatesVisited.Add($key, $val)
-        }
-        else {
-            $t8CoordinatesVisited[[string]$t8Coordinates]++
-        }
-        $t8Coordinates, $t9Coordinates = Move-Tail -tailACoordinates $t8Coordinates -tailBCoordinates $t9Coordinates
-        if ($null -eq $t9CoordinatesVisited[[string]$t9Coordinates]) {
-            [string]$key = $t9Coordinates
-            [int]$val = 1
-            $t9CoordinatesVisited.Add($key, $val)
-        }
-        else {
-            $t9CoordinatesVisited[[string]$t9Coordinates]++
+        if ($t8Coordinates -ne $t9Coordinates) {
+            $t8Coordinates, $t9Coordinates = Move-Tail -tailACoordinates $t8Coordinates -tailBCoordinates $t9Coordinates
+            if ($null -eq $t9CoordinatesVisited[[string]$t9Coordinates]) {
+                [string]$key = $t9Coordinates
+                [int]$val = 1
+                $t9CoordinatesVisited.Add($key, $val)
+            }
+            else {
+                $t9CoordinatesVisited[[string]$t9Coordinates]++
+            }
         }
     }
 }

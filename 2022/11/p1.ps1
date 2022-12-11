@@ -14,8 +14,8 @@ class Monkey {
     [int]$itemsInspected
 }
 
-$data = (Get-Content -Path $filename -Raw).Split("$nl$nl")
 $nl = [System.Environment]::NewLine
+$data = (Get-Content -Path $filename -Raw).Split("$nl$nl")
 $monkeyNum = 0
 $monkeys = [System.Collections.ArrayList]@()
 

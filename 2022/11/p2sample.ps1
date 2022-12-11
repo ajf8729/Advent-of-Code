@@ -1,8 +1,3 @@
-[CmdletBinding()]
-Param(
-    [string]$filename
-)
-
 class Monkey {
     [int]$id
     [System.Collections.ArrayList]$itemWorryLevels
@@ -15,7 +10,7 @@ class Monkey {
 }
 
 $nl = [System.Environment]::NewLine
-$data = (Get-Content -Path .\input.txt -Raw).Split("$nl$nl")
+$data = (Get-Content -Path .\sampleinput.txt -Raw).Split("$nl$nl")
 $monkeyNum = 0
 $monkeys = [System.Collections.ArrayList]@()
 
@@ -50,28 +45,20 @@ for ($i = 1; $i -le 10000; $i++) {
                     }
                     '*' {
                         if (
-                            (([bigint]$monkey.itemWorryLevels[0] % 2) -gt 0) -or
-                            (([bigint]$monkey.itemWorryLevels[0] % 3) -gt 0) -or
-                            (([bigint]$monkey.itemWorryLevels[0] % 5) -gt 0) -or
-                            (([bigint]$monkey.itemWorryLevels[0] % 7) -gt 0) -or
-                            (([bigint]$monkey.itemWorryLevels[0] % 11) -gt 0) -or
                             (([bigint]$monkey.itemWorryLevels[0] % 13) -gt 0) -or
                             (([bigint]$monkey.itemWorryLevels[0] % 17) -gt 0) -or
-                            (([bigint]$monkey.itemWorryLevels[0] % 19) -gt 0)
+                            (([bigint]$monkey.itemWorryLevels[0] % 19) -gt 0) -or
+                            (([bigint]$monkey.itemWorryLevels[0] % 23) -gt 0)
                         ) {
                             [bigint]$monkey.itemWorryLevels[0] *= [bigint]$monkey.operationValue
                         }
                         if (
-                            (([bigint]$monkey.itemWorryLevels[0] % 2) -eq 0) -or
-                            (([bigint]$monkey.itemWorryLevels[0] % 3) -eq 0) -or
-                            (([bigint]$monkey.itemWorryLevels[0] % 5) -eq 0) -or
-                            (([bigint]$monkey.itemWorryLevels[0] % 7) -eq 0) -or
-                            (([bigint]$monkey.itemWorryLevels[0] % 11) -eq 0) -or
                             (([bigint]$monkey.itemWorryLevels[0] % 13) -eq 0) -or
                             (([bigint]$monkey.itemWorryLevels[0] % 17) -eq 0) -or
-                            (([bigint]$monkey.itemWorryLevels[0] % 19) -eq 0)
+                            (([bigint]$monkey.itemWorryLevels[0] % 19) -eq 0) -or
+                            (([bigint]$monkey.itemWorryLevels[0] % 23) -eq 0)
                         ) {
-                            [bigint]$monkey.itemWorryLevels[0] %= 9699690
+                            [bigint]$monkey.itemWorryLevels[0] %= 96577
                         }
                         break
                     }

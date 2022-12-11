@@ -33,7 +33,7 @@ foreach ($item in $data) {
     $monkeyNum++
 }
 
-for ($i = 1; $i -le 20; $i++) {
+for ($i = 1; $i -le 10000; $i++) {
     foreach ($monkey in $monkeys) {
         $monkeyHasObjects = $true
         while ($monkeyHasObjects) {
@@ -41,25 +41,41 @@ for ($i = 1; $i -le 20; $i++) {
                 $monkey.itemsInspected++
                 if ($monkey.operationValue -eq 'old') {
                     $opValIsOld = $true
-                    $monkey.operationValue = [int]$monkey.itemWorryLevels[0]
+                    $monkey.operationValue = [bigint]$monkey.itemWorryLevels[0]
                 }
                 switch ($monkey.operation) {
                     '+' {
-                        [int]$monkey.itemWorryLevels[0] += [int]$monkey.operationValue
+                        [bigint]$monkey.itemWorryLevels[0] += [bigint]$monkey.operationValue
                         break
                     }
                     '*' {
-                        #[int]$monkey.itemWorryLevels[0] *= [bigint]$monkey.operationValue
-                        if ( (([int]$monkey.itemWorryLevels[0] % 23) -gt 0 -and ([int]$monkey.itemWorryLevels[0] % 19) -gt 0 -and ([int]$monkey.itemWorryLevels[0] % 13) -gt 0 -and ([int]$monkey.itemWorryLevels[0] % 17) -gt 0)) {
-                            [int]$monkey.itemWorryLevels[0] %= [int]$monkey.operationValue
+                        if (
+                            (([bigint]$monkey.itemWorryLevels[0] % 2) -gt 0) -or
+                            (([bigint]$monkey.itemWorryLevels[0] % 3) -gt 0) -or
+                            (([bigint]$monkey.itemWorryLevels[0] % 5) -gt 0) -or
+                            (([bigint]$monkey.itemWorryLevels[0] % 7) -gt 0) -or
+                            (([bigint]$monkey.itemWorryLevels[0] % 11) -gt 0) -or
+                            (([bigint]$monkey.itemWorryLevels[0] % 13) -gt 0) -or
+                            (([bigint]$monkey.itemWorryLevels[0] % 17) -gt 0) -or
+                            (([bigint]$monkey.itemWorryLevels[0] % 19) -gt 0)
+                        ) {
+                            [bigint]$monkey.itemWorryLevels[0] *= [bigint]$monkey.operationValue
                         }
-                        else {
-                            [int]$monkey.itemWorryLevels[0] *= [int]$monkey.operationValue
+                        if (
+                            (([bigint]$monkey.itemWorryLevels[0] % 2) -eq 0) -or
+                            (([bigint]$monkey.itemWorryLevels[0] % 3) -eq 0) -or
+                            (([bigint]$monkey.itemWorryLevels[0] % 5) -eq 0) -or
+                            (([bigint]$monkey.itemWorryLevels[0] % 7) -eq 0) -or
+                            (([bigint]$monkey.itemWorryLevels[0] % 11) -eq 0) -or
+                            (([bigint]$monkey.itemWorryLevels[0] % 13) -eq 0) -or
+                            (([bigint]$monkey.itemWorryLevels[0] % 17) -eq 0) -or
+                            (([bigint]$monkey.itemWorryLevels[0] % 19) -eq 0)
+                        ) {
+                            [bigint]$monkey.itemWorryLevels[0] %= 9699690
                         }
                         break
                     }
                 }
-                #$monkey.itemWorryLevels[0] = [Math]::Floor($monkey.itemWorryLevels[0] / 3)
                 $check = $monkey.itemWorryLevels[0] % $monkey.divisibilityTest
                 if ($check -eq 0) {
                     $monkeys[$monkey.throwToIfTrue].itemWorryLevels.Add($monkey.itemWorryLevels[0]) | Out-Null
@@ -82,6 +98,6 @@ for ($i = 1; $i -le 20; $i++) {
             }
         }
     }
-    Write-Host "round: $i"
-    $monkeys.GetEnumerator() | Select-Object id, itemsInspected | Write-Host
 }
+$topTwo = $monkeys.GetEnumerator() | Sort-Object itemsInspected -Descending | Select-Object -exp itemsInspected -First 2
+$topTwo[0] * $topTwo[1]

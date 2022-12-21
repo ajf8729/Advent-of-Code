@@ -1,6 +1,6 @@
 Param(
     [string]$filename,
-    [int]$humanValue
+    [double]$humanValue
 )
 
 class mathMonkey {
@@ -35,7 +35,7 @@ foreach ($line in $lines) {
         }
     }
 }
-$numberMonkeys['humn'] = $humanValue
+[double]$numberMonkeys['humn'] = $humanValue
 $mathMonkeys | Where-Object {$_.name -eq 'root'} | ForEach-Object {$_.operation = '='}
 $count = $mathMonkeys.Count
 $check = $false
@@ -57,27 +57,31 @@ do {
             if ( ($mathMonkey.value1 -match '[0-9]+') -and ($mathMonkey.value2 -match '[0-9]+') ) {
                 switch ($mathMonkey.operation) {
                     '+' {
-                        [float]$result = [float]$mathMonkey.value1 + [float]$mathMonkey.value2
+                        [double]$result = [double]$mathMonkey.value1 + [double]$mathMonkey.value2
                         break
                     }
                     '-' {
-                        [float]$result = [float]$mathMonkey.value1 - [float]$mathMonkey.value2
+                        [double]$result = [double]$mathMonkey.value1 - [double]$mathMonkey.value2
                         break
                     }
                     '*' {
-                        [float]$result = [float]$mathMonkey.value1 * [float]$mathMonkey.value2
+                        [double]$result = [double]$mathMonkey.value1 * [double]$mathMonkey.value2
                         break
                     }
                     '/' {
-                        [float]$result = [float]$mathMonkey.value1 / [float]$mathMonkey.value2
+                        [double]$result = [double]$mathMonkey.value1 / [double]$mathMonkey.value2
                         break
                     }
                     '=' {
-                        if ([float]$mathMonkey.value1 -eq [float]$mathMonkey.value2) {
-                            return $true
+                        if ([double]$mathMonkey.value1 -eq [double]$mathMonkey.value2) {
+                            $v1 = $mathMonkey.value1
+                            $v2 = $mathMonkey.value2
+                            return "$v1`r`n$v2"
                         }
                         else {
-                            return $false
+                            $v1 = $mathMonkey.value1
+                            $v2 = $mathMonkey.value2
+                            return "$v1`r`n$v2"
                         }
                     }
                 }

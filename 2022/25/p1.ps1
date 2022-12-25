@@ -26,14 +26,13 @@ foreach ($line in $data) {
 
 4890/5 = 978 r  0
  978/5 = 196 r -2
- 196/5 = 39  r  1
-  39/5 = 8   r -1
-   8/5 = 2   r -2
-   2/5 = 0   r  2
+ 196/5 =  39 r  1
+  39/5 =   8 r -1
+   8/5 =   2 r -2
+   2/5 =   0 r  2
 
 "4890" == "2=-1=0"
 
-dividand / divisor = quotient + remainder
 #>
 
 $dividand = $decSum

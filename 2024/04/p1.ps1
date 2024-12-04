@@ -1,3 +1,10 @@
+#\
+# \____
+#     /
+#    <
+#  ___\
+# /
+#/
 $d = Get-Content d.txt
 $xmas = 0
 for ($i = 0; $i -lt $d.Length; $i++) {

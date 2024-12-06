@@ -168,6 +168,3 @@ foreach ($visit in $visits) {
     }
 }
 $loop
-
-# 2644 is too high
-# 2644 is too high
